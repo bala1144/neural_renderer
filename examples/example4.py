@@ -44,6 +44,7 @@ class Model(nn.Module):
 
     def forward(self):
         image = self.renderer(self.vertices, self.faces, mode='silhouettes')
+        print('image shape', image.shape)
         loss = torch.sum((image - self.image_ref[None, :, :]) ** 2)
         return loss
 
@@ -61,7 +62,7 @@ def make_reference_image(filename_ref, filename_obj):
     model.cuda()
 
     model.renderer.eye = nr.get_points_from_angles(2.732, 30, -15)
-    images, _, _ = model.renderer.render(model.vertices, model.faces, torch.tanh(model.textures))
+    images = model.renderer.render(model.vertices, model.faces, torch.tanh(model.textures))
     image = images.detach().cpu().numpy()[0]
     imsave(filename_ref, image)
 
@@ -89,7 +90,7 @@ def main():
         loss = model()
         loss.backward()
         optimizer.step()
-        images, _, _ = model.renderer(model.vertices, model.faces, torch.tanh(model.textures))
+        images = model.renderer(model.vertices, model.faces, torch.tanh(model.textures))
         image = images.detach().cpu().numpy()[0].transpose(1,2,0)
         imsave('/tmp/_tmp_%04d.png' % i, image)
         loop.set_description('Optimizing (loss %.4f)' % loss.data)

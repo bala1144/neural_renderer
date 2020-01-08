@@ -14,11 +14,15 @@ Currently the library has both Python 3 and Python 2 support.
 
 **Note**: In some newer PyTorch versions you might see some compilation errors involving AT_ASSERT. In these cases you can use the version of the code that is in the branch *at_assert_fix*. These changes will be merged into master in the near future.
 ## Installation
-You can install the package by running
+For Python 2
 ```
-pip install neural_renderer_pytorch
+sudo python setup.py install
 ```
-Since running install.py requires PyTorch, make sure to install PyTorch before running the above command.
+For Python 3
+```
+sudo python3 setup.py install
+```
+
 ## Running examples
 ```
 python ./examples/example1.py

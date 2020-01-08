@@ -4,8 +4,8 @@ import os
 import numpy as np
 from skimage.io import imsave
 
-import torch
 import neural_renderer as nr
+import torch
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.join(current_dir, 'data')
@@ -29,11 +29,11 @@ class TestCore(unittest.TestCase):
 
         obj_file = os.path.join(data_dir, 'tetrahedron.obj')
         vertices, faces = nr.load_obj(obj_file, False)
-        assert (torch.allclose(torch.from_numpy(vertices_ref).cuda(), vertices))
-        assert (torch.allclose(torch.from_numpy(faces_ref).cuda(), faces))
+        assert (np.allclose(vertices_ref, vertices.detach().cpu().numpy()))
+        assert (np.allclose(faces_ref, faces.detach().cpu().numpy()))
         vertices, faces = nr.load_obj(obj_file, True)
-        assert (torch.allclose(torch.from_numpy(vertices_ref).cuda() * 2 - 1.0, vertices))
-        assert (torch.allclose(torch.from_numpy(faces_ref).cuda(), faces))
+        assert (np.allclose(vertices_ref * 2 - 1.0, vertices.detach().cpu().numpy()))
+        assert (np.allclose(faces_ref, faces.detach().cpu().numpy()))
 
     def test_teapot(self):
         obj_file = os.path.join(data_dir, 'teapot.obj')
